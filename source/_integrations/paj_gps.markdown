@@ -10,7 +10,6 @@ ha_config_flow: true
 ha_codeowners:
   - '@skipperro'
 ha_domain: paj_gps
-ha_zeroconf: false
 ha_platforms:
   - device_tracker
   - sensor
@@ -69,46 +68,37 @@ The PAJ GPS {% term integration %} will track the location of each device regist
 
 Opening the garage door when a car with a PAJ GPS device is near using automations:
 
-{% raw %}
-
-```yaml
-alias: Open garage door for the car
-description: "If car enters the home zone, open the garage door"
-triggers:
-  - trigger: zone
-    entity_id: person.car_tracker
-    zone: zone.home
-    event: enter
-actions:
-  - action: button.press
-    target:
-      entity_id: button.garage_door_open
-```
-
-{% endraw %}
+{% example %}
+automation: |
+  alias: "Open garage door for the car"
+  triggers:
+    - trigger: zone
+      entity_id: person.car_tracker
+      zone: zone.home
+      event: enter
+  actions:
+    - action: button.press
+      target:
+        entity_id: button.garage_door_open
+{% endexample %}
 
 Sending a notification when a device's battery drops below 25%:
 
-{% raw %}
-
-```yaml
-alias: Notify when PAJ GPS battery is low
-description: "Send a notification when the tracker battery drops below 25%"
-triggers:
-  - trigger: numeric_state
-    entity_id: sensor.my_tracker_battery
-    below: 25
-actions:
-  - action: notify.notify
-    data:
-      title: "Tracker battery low"
-      message: >-
-        Tracker battery is low:
-        {{ states('sensor.my_tracker_battery') }}%.
-        Please recharge it soon.
-```
-
-{% endraw %}
+{% example %}
+automation: |
+  alias: "Notify when PAJ GPS battery is low"
+  triggers:
+    - trigger: numeric_state
+      entity_id: sensor.my_tracker_battery
+      below: 25
+  actions:
+    - action: notify.send_message
+      target:
+        entity_id: notify.my_phone
+      data:
+        title: "Tracker battery low"
+        message: "Please recharge your tracker soon."
+{% endexample %}
 
 ## Data updates
 
